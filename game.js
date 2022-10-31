@@ -13,10 +13,11 @@
 //   rotateZ(radians(45));
 //   box(50, 50, 100);
 // }
-let cellWidth = 20;
+let cellWidth = 15;
 let numOfCols, numOfRows;
 let cellsArray = [];
 let currentCellBeingVisited;
+let stack = [];
 function setup() {
   createCanvas(windowWidth, windowHeight);
   numOfCols = floor(width / cellWidth);
@@ -25,7 +26,6 @@ function setup() {
     for (let colNum = 0; colNum < numOfCols;colNum++) {
       let cell = new Cell(colNum, rowNum);
       cellsArray.push(cell);
-      console.log(cell);
     }
   }
   currentCellBeingVisited = cellsArray[0];
@@ -38,11 +38,14 @@ function draw() {
   currentCellBeingVisited.visited = true;
   currentCellBeingVisited.highlight();
   let nextCellToVisit = currentCellBeingVisited.checkNeighbors();
-  nextCellToVisit.highlight();
   if (nextCellToVisit) {
     nextCellToVisit.visited = true;
+    stack.push(currentCellBeingVisited);
     removeWalls(currentCellBeingVisited, nextCellToVisit);
-    currenctCellBeingVisited = nextCellToVisit;
+    currentCellBeingVisited = nextCellToVisit;
+  }
+  else if (stack.length > 0){
+    currentCellBeingVisited = stack.pop();
   }
 }
 function getIndex(colNum, rowNum) {
@@ -53,7 +56,7 @@ function getIndex(colNum, rowNum) {
   }
 }
 function removeWalls(cellA, cellB) {
-  let horizontalDifference = cellA.rowNum - cellB.rowNum;
+  let horizontalDifference = cellA.colNum - cellB.colNum;
   if (horizontalDifference === 1) {
     cellA.walls[3] = false;
     cellB.walls[1] = false;
@@ -61,7 +64,7 @@ function removeWalls(cellA, cellB) {
     cellA.walls[1] = false;
     cellB.walls[3] = false;
   }
-  let verticalDifference = cellA.colNum - cellB.colNum;
+  let verticalDifference = cellA.rowNum - cellB.rowNum;
   if (verticalDifference == 1) {
     cellA.walls[0] = false;
     cellB.walls[2] = false;
@@ -88,7 +91,7 @@ class Cell {
     let neighbors = [];
     let top = cellsArray[getIndex(this.colNum, this.rowNum - 1)];
     let right = cellsArray[getIndex(this.colNum + 1 , this.rowNum)];
-    let bottom = cellsArray[getIndex(this.colNum, this.rowNum - 1)];
+    let bottom = cellsArray[getIndex(this.colNum, this.rowNum + 1)];
     let left = cellsArray[getIndex(this.colNum - 1, this.rowNum)];
     if (top && top.visited == false) {
       neighbors.push(top);
@@ -124,6 +127,11 @@ class Cell {
     }
     if (this.walls[1] == true) {
       line(xPos + cellWidth, yPos, xPos + cellWidth, yPos + cellWidth);
+    }
+    if (this.visited == true) {
+      noStroke();
+      fill(60, 279, 113, 100);
+      rect(xPos, yPos, cellWidth, cellWidth);
     }
   }
 }
