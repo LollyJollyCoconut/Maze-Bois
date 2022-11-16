@@ -1,25 +1,17 @@
-// let angleX;
-// function setup() {
-//   createCanvas(windowWidth, windowHeight, WEBGL);
-//   angleX = 0;
-// }
-
-// function draw() {
-//   background(255, 0, 0)
-//   rectMode(CENTER);
-//   angleX += 1;
-//   rotateX(radians(angleX));
-//   rotateY(radians(45));
-//   rotateZ(radians(45));
-//   box(50, 50, 100);
-// }
-let cellWidth = 15;
+let cellWidth = 100;
+let wallWidth = 50;
+let wallHeight = 50;
+let offset = cellWidth/2;
+let texture;
 let numOfCols, numOfRows;
 let cellsArray = [];
 let currentCellBeingVisited;
 let stack = [];
+function preload(){
+  texture = loadImage("The_Missing_textures (1).webp");
+}
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth, windowHeight, WEBGL);
   numOfCols = floor(width / cellWidth);
   numOfRows = floor(height / cellWidth);
   for(let rowNum = 0; rowNum < numOfRows; rowNum++) {
@@ -32,6 +24,8 @@ function setup() {
 }
 function draw() {
   background (255,215,0);
+  camera(0, 0, mouseX, 0, 0, 0, 0, 1, 0);
+  translate(-width/2, -height/2, 0);
   for (let cellNum = 0; cellNum < cellsArray.length; cellNum++) {
     cellsArray[cellNum].show();
   }
@@ -118,15 +112,32 @@ class Cell {
     stroke (255);
     if (this.walls[0] == true) {
       line(xPos, yPos, xPos + cellWidth, yPos);
+      translate(xPos + cellWidth/2, yPos, 0 + wallHeight/2);
+      texture(texture);
+      box(cellWidth + offset, wallWidth, wallHeight);
+      translate(-1*(xPos + cellWidth/2), -1*(yPos), -1*(0 + wallHeight/2));
     }
     if (this.walls[2] == true) {
       line(xPos, yPos + cellWidth, xPos + cellWidth, yPos + cellWidth);
+      translate(xPos + cellWidth/2, yPos + cellWidth, 0 + wallHeight/2);
+      texture(texture);
+      box(cellWidth + offset, wallWidth, wallHeight);
+      translate(-1*(xPos + cellWidth/2), -1*(yPos + cellWidth), -1*(0 + wallHeight/2));
     }
     if (this.walls[3] == true) {
       line(xPos, yPos, xPos, yPos + cellWidth);
+      translate(xPos, yPos + cellWidth/2, 0 + wallHeight/2);
+      texture(texture);
+      box(wallWidth, cellWidth + offset, wallHeight);
+      translate(-1*(xPos), -1*(yPos + cellWidth/2), -1*(0 + wallHeight/2));
     }
     if (this.walls[1] == true) {
       line(xPos + cellWidth, yPos, xPos + cellWidth, yPos + cellWidth);
+      translate(xPos + cellWidth, yPos + cellWidth/2, 0 + wallHeight/2);
+      texture(texture);
+      box(wallWidth, cellWidth + offset, wallHeight);
+      translate(-1*(xPos + cellWidth), -1*(yPos + cellWidth/2), -1*(0 + wallHeight/2));
+
     }
     if (this.visited == true) {
       noStroke();
