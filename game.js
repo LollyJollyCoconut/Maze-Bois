@@ -2,13 +2,18 @@ let cellWidth = 100;
 let wallWidth = 50;
 let wallHeight = 50;
 let offset = cellWidth/2;
-let texture;
+let wallTexture;
 let numOfCols, numOfRows;
 let cellsArray = [];
 let currentCellBeingVisited;
 let stack = [];
+let cameraXPos = 0;
+let cameraYPos = 0;
+let cameraZPos = 1000;
+let cameraIncrement = 50;
+
 function preload(){
-  texture = loadImage("The_Missing_textures (1).webp");
+  wallTexture = loadImage("E.png");
 }
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -24,7 +29,9 @@ function setup() {
 }
 function draw() {
   background (255,215,0);
-  camera(0, 0, mouseX, 0, 0, 0, 0, 1, 0);
+  modifyCameraSettings();
+  frustum(-1000000, 1000000, -1000000, 1000000, -1000000, 1000000);
+  camera(cameraXPos, cameraYPos, cameraZPos, 0, 0, 0, 0, 1, 0);
   translate(-width/2, -height/2, 0);
   for (let cellNum = 0; cellNum < cellsArray.length; cellNum++) {
     cellsArray[cellNum].show();
@@ -40,6 +47,26 @@ function draw() {
   }
   else if (stack.length > 0){
     currentCellBeingVisited = stack.pop();
+  }
+}
+function modifyCameraSettings() {
+  if (keyIsDown(87)) {
+    cameraYPos -= cameraIncrement;
+  }
+  else if (keyIsDown(83)) {
+    cameraYPos += cameraIncrement;
+  }
+  else if (keyIsDown(65)) {
+    cameraXPos -= cameraIncrement;
+  }
+  else if (keyIsDown(68)) {
+    cameraXPos += cameraIncrement;
+  }
+  else if (keyIsDown(81)) {
+    cameraZPos -= cameraIncrement;
+  }
+  else if (keyIsDown(69)) {
+    cameraZPos += cameraIncrement;
   }
 }
 function getIndex(colNum, rowNum) {
@@ -109,32 +136,32 @@ class Cell {
   show() {
     let xPos = this.colNum * cellWidth;
     let yPos = this.rowNum * cellWidth;
-    stroke (255);
+    noStroke();
     if (this.walls[0] == true) {
       line(xPos, yPos, xPos + cellWidth, yPos);
       translate(xPos + cellWidth/2, yPos, 0 + wallHeight/2);
-      texture(texture);
+      texture(wallTexture);
       box(cellWidth + offset, wallWidth, wallHeight);
       translate(-1*(xPos + cellWidth/2), -1*(yPos), -1*(0 + wallHeight/2));
     }
     if (this.walls[2] == true) {
       line(xPos, yPos + cellWidth, xPos + cellWidth, yPos + cellWidth);
       translate(xPos + cellWidth/2, yPos + cellWidth, 0 + wallHeight/2);
-      texture(texture);
+      texture(wallTexture);
       box(cellWidth + offset, wallWidth, wallHeight);
       translate(-1*(xPos + cellWidth/2), -1*(yPos + cellWidth), -1*(0 + wallHeight/2));
     }
     if (this.walls[3] == true) {
       line(xPos, yPos, xPos, yPos + cellWidth);
       translate(xPos, yPos + cellWidth/2, 0 + wallHeight/2);
-      texture(texture);
+      texture(wallTexture);
       box(wallWidth, cellWidth + offset, wallHeight);
       translate(-1*(xPos), -1*(yPos + cellWidth/2), -1*(0 + wallHeight/2));
     }
     if (this.walls[1] == true) {
       line(xPos + cellWidth, yPos, xPos + cellWidth, yPos + cellWidth);
       translate(xPos + cellWidth, yPos + cellWidth/2, 0 + wallHeight/2);
-      texture(texture);
+      texture(wallTexture);
       box(wallWidth, cellWidth + offset, wallHeight);
       translate(-1*(xPos + cellWidth), -1*(yPos + cellWidth/2), -1*(0 + wallHeight/2));
 
