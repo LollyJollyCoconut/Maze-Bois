@@ -30,7 +30,7 @@ function setup() {
 function draw() {
   background (255,215,0);
   modifyCameraSettings();
-  frustum(-1000000, 1000000, -1000000, 1000000, -1000000, 1000000);
+  // frustum(-1000000, 1000000, -1000000, 1000000, -1000000, 1000000);
   camera(cameraXPos, cameraYPos, cameraZPos, 0, 0, 0, 0, 1, 0);
   translate(-width/2, -height/2, 0);
   for (let cellNum = 0; cellNum < cellsArray.length; cellNum++) {

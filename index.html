@@ -10,10 +10,63 @@
                 margin: 0;
             }
         </style>
-          <script src="p5.js"></script>
+        <script src="p5.js"></script>
         <!-- <script src="../addons/p5.sound.js"></script> -->
         <script src="game.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <link rel = "stylesheet" type = "text/css" href = "style.css">
     </head>
     <body>
+                <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary help-button" data-bs-toggle="modal" data-bs-target="#HelpModal">
+          ?
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="HelpModal" tabindex="-1" aria-labelledby="HelpModalLabel" aria-hidden="true">
+          <div class="modal-dialog"> 
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5 custom-font" id="HelpModalLabel">How to Play!</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class = "modal-body custom-font">
+                <p>This is a maze game!</p>
+                <p>Tilt the maze to guide the player to the finish line!</p>
+                <p>Here are the controls:</p>
+                <p>Q is to zoom out</p>
+                <p>E is to zoom in</p>
+                <p>W is to tilt upwards</p>
+                <p>S is to tilt downwards</p>
+                <p>A is to tilt leftwards</p>
+                <p>D is to tilt rightwards</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary custom-font" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="WonModal" tabindex="-1" aria-labelledby="WonModalLabel" aria-hidden="true">
+          <div class="modal-dialog"> 
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5 custom-font" id="WonModalLabel">You have won the Game!</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class = "modal-body custom-font">
+                <p>This is a maze game!</p>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary custom-font" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     </body>
 </html>
