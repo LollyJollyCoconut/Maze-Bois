@@ -12,6 +12,7 @@
         </style>
         <script src="p5.js"></script>
         <!-- <script src="../addons/p5.sound.js"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.6.0/tsparticles.bundle.min.js"></script>
         <script src="game.js"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,9 +21,13 @@
         <link rel = "stylesheet" type = "text/css" href = "style.css">
     </head>
     <body>
+      <div id = "tsparticles"></div>
                 <!-- Button trigger modal -->
         <button type="button" class="btn btn-primary help-button" data-bs-toggle="modal" data-bs-target="#HelpModal">
           ?
+        </button>
+
+        <button type="button" class="btn btn-primary win-button" data-bs-toggle="modal" data-bs-target="#WonModal">
         </button>
 
         <!-- Modal -->
@@ -51,18 +56,19 @@
           </div>
         </div>
         <div class="modal fade" id="WonModal" tabindex="-1" aria-labelledby="WonModalLabel" aria-hidden="true">
-          <div class="modal-dialog"> 
-            <div class="modal-content">
+          <div class="modal-dialog">
+            <div class="modal-content modal-image">
               <div class="modal-header">
-                <h1 class="modal-title fs-5 custom-font" id="WonModalLabel">You have won the Game!</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h1 class="modal-title fs-5 custom-font" id="LostModalLabel">🗿 You have Lost the Game 🗿s</h1>
+                <h1 class="modal-title fs-5 custom-font" id="WonModalLabel">(づ｡◕‿‿◕｡)づ sCongratulations ヘ( ^o^)ノ＼(^_^ )</h1>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class = "modal-body custom-font">
-                <p>This is a maze game!</p>
+                <img src = "digibyte-dgb.gif" alt = "Wat de Dog doin?" class = "modal-modal">
 
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary custom-font" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning custom-font" data-bs-dismiss="modal">Close</button>
               </div>
             </div>
           </div>

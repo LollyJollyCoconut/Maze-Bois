@@ -16,3 +16,12 @@
 	font-family: 'Kdam Thmor Pro', sans-serif;
 	
 }
+
+.modal-image {
+	background-color: black;
+	color: white;
+}
+
+.modal-modal {
+	max-width: 100%;
+}
