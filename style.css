@@ -25,3 +25,7 @@
 .modal-modal {
 	max-width: 100%;
 }
+
+.hide {
+	display: none;
+}

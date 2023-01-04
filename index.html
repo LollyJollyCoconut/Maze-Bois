@@ -26,10 +26,6 @@
         <button type="button" class="btn btn-primary help-button" data-bs-toggle="modal" data-bs-target="#HelpModal">
           ?
         </button>
-
-        <button type="button" class="btn btn-primary win-button" data-bs-toggle="modal" data-bs-target="#WonModal">
-        </button>
-
         <!-- Modal -->
         <div class="modal fade" id="HelpModal" tabindex="-1" aria-labelledby="HelpModalLabel" aria-hidden="true">
           <div class="modal-dialog"> 
@@ -59,12 +55,13 @@
           <div class="modal-dialog">
             <div class="modal-content modal-image">
               <div class="modal-header">
-                <h1 class="modal-title fs-5 custom-font" id="LostModalLabel">🗿 You have Lost the Game 🗿s</h1>
-                <h1 class="modal-title fs-5 custom-font" id="WonModalLabel">(づ｡◕‿‿◕｡)づ sCongratulations ヘ( ^o^)ノ＼(^_^ )</h1>
+                <h1 class="modal-title fs-5 custom-font hide" id="LostModalLabel">🗿 You have Lost the Game 🗿s</h1>
+                <h1 class="modal-title fs-5 custom-font hide" id="WonModalLabel">(づ｡◕‿‿◕｡)づ Congratulations ヘ( ^o^)ノ＼(^_^ )</h1>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class = "modal-body custom-font">
-                <img src = "digibyte-dgb.gif" alt = "Wat de Dog doin?" class = "modal-modal">
+                <img src = "digibyte-dgb.gif" alt = "Wat de Dog doin?" class = "modal-modal hide" id = "lost-image-thing">
+                <img src = "Hehehe.png" alt = "It was supposed to load tho?" class = "modal-modal hide" id = "win-image-thing">
 
               </div>
               <div class="modal-footer">
