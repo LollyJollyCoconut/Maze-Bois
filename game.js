@@ -1,4 +1,3 @@
-const particles = tsParticles.domItem(0);
 let playerObject;
 let cellWidth = 100;
 let wallWidth = 50;
@@ -14,6 +13,9 @@ let cameraYPos = 0;
 let cameraZPos = 1000;
 let cameraIncrement = 50;
 let player;
+let startingCell;
+let endingCell;
+let isMazeDoneDrawing = false;
 
 function preload(){
   wallTexture = loadImage("E.png");
@@ -42,19 +44,29 @@ function draw() {
   for (let cellNum = 0; cellNum < cellsArray.length; cellNum++) {
     cellsArray[cellNum].show();
   }
-  currentCellBeingVisited.visited = true;
-  currentCellBeingVisited.highlight();
-  let nextCellToVisit = currentCellBeingVisited.checkNeighbors();
-  if (nextCellToVisit) {
-    nextCellToVisit.visited = true;
-    stack.push(currentCellBeingVisited);
-    removeWalls(currentCellBeingVisited, nextCellToVisit);
-    currentCellBeingVisited = nextCellToVisit;
+  if (isMazeDoneDrawing == false) {
+    currentCellBeingVisited.visited = true;
+    currentCellBeingVisited.highlight();
+    let nextCellToVisit = currentCellBeingVisited.checkNeighbors();
+    if (nextCellToVisit) {
+      nextCellToVisit.visited = true;
+      stack.push(currentCellBeingVisited);
+      removeWalls(currentCellBeingVisited, nextCellToVisit);
+      currentCellBeingVisited = nextCellToVisit;
+    }
+    else if (stack.length > 0){
+      currentCellBeingVisited = stack.pop();
+    }
+    else {
+      isMazeDoneDrawing = true;
+      getStartAndEndPositions();
+    }
   }
-  else if (stack.length > 0){
-    currentCellBeingVisited = stack.pop();
+  else {
+    endingCell.changeFloorColor(0,100,100);
+    player.checkWinCondition();
+    player.show();
   }
-  player.show();
 }
 function modifyCameraSettings() {
   if (keyIsDown(87)) {
@@ -74,6 +86,29 @@ function modifyCameraSettings() {
   }
   else if (keyIsDown(69)) {
     cameraZPos += cameraIncrement;
+  }
+}
+function getStartAndEndPositions() {
+  let topLeftCorner = cellsArray[getIndex(0,0)];
+  let topRightCorner = cellsArray[getIndex(numOfCols - 1,0)];
+  let bottomRightCorner = cellsArray[getIndex(numOfCols - 1, numOfRows - 1)];
+  let bottomLeftCorner = cellsArray[getIndex(0,numOfRows - 1)];
+  let cornerCellsArray = [topLeftCorner, topRightCorner, bottomRightCorner, bottomLeftCorner];
+  if (!startingCell) {
+    let randomIndex = floor(random(0,cornerCellsArray.length));
+    startingCell = cornerCellsArray[randomIndex];
+    player.rowNum = startingCell.rowNum;
+    player.colNum = startingCell.colNum;
+    player.getCurrentCellPosition();
+    if (randomIndex == 0){
+      endingCell = cornerCellsArray[2];
+    }else if (randomIndex == 1){
+      endingCell = cornerCellsArray[3];
+    }else if (randomIndex == 2){
+      endingCell = cornerCellsArray[0];
+    }else if (randomIndex == 3){
+      endingCell = cornerCellsArray[1];
+    }
   }
 }
 function getIndex(colNum, rowNum) {
@@ -101,12 +136,31 @@ function removeWalls(cellA, cellB) {
     cellB.walls[0] = false;
   }
 }
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    player.move("up");
+  }else if (keyCode === DOWN_ARROW) {
+    player.move("down");
+  }else if (keyCode === LEFT_ARROW) {
+    player.move("left");
+  }else if (keyCode === RIGHT_ARROW) {
+    player.move("right");
+  }
+  return false;
+}
 class Cell {
   constructor(cellColNum, cellRowNum){
     this.rowNum = cellRowNum;
     this.colNum = cellColNum;
     this.walls = [true, true, true, true];
     this.visited = false;
+  }
+  changeFloorColor(r,g,b,a) {
+    let xPos = this.colNum*cellWidth;
+    let yPos = this.rowNum*cellWidth;
+    noStroke();
+    fill(r,g,b,a);
+    rect(xPos, yPos, cellWidth, cellWidth);
   }
   highlight() {
     let xPos = this.colNum*cellWidth;
@@ -185,6 +239,7 @@ class Player {
     this.rowNum = 0;
     this.colNum = 0;
     this.modelObject = playerObject;
+    this.currentCellPosition = 0;
   }
   show() {
     let xPos = this.colNum*cellWidth + cellWidth/2;
@@ -195,5 +250,34 @@ class Player {
     normalMaterial();
     model(this.modelObject);
     translate(-1*(xPos), -1*(yPos), -1*(zPos));
+  }
+  getCurrentCellPosition() {
+    let cellIndex = getIndex(this.colNum, this.rowNum);
+    this.currentCellPosition = cellsArray[cellIndex];
+  }
+  move(direction) {
+    if(direction == "up") {
+      if (this.currentCellPosition.walls[0] != true) {
+        this.rowNum -= 1;
+      }
+    }else if (direction == "down") {
+      if (this.currentCellPosition.walls[2] != true) {
+        this.rowNum += 1;
+      }
+    }else if (direction == "left") {
+      if (this.currentCellPosition.walls[3] != true) {
+        this.colNum -= 1;
+      }
+    }else if (direction == "right") {
+      if (this.currentCellPosition.walls[1] != true) {
+        this.colNum += 1;
+      }
+    }
+    this.getCurrentCellPosition();
+  }
+  checkWinCondition() {
+    if (player.currentCellPosition == endingCell) {
+      party.confetti(document.querySelector("body"));
+    }
   }
 }
