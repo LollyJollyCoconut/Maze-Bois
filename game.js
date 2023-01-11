@@ -63,7 +63,9 @@ function draw() {
     }
   }
   else {
+    frameRate(30);
     endingCell.changeFloorColor(0,100,100);
+    movePlayer();
     player.checkWinCondition();
     player.show();
   }
@@ -136,14 +138,14 @@ function removeWalls(cellA, cellB) {
     cellB.walls[0] = false;
   }
 }
-function keyPressed() {
-  if (keyCode === UP_ARROW) {
+function movePlayer() {
+  if (keyIsDown(38)) {
     player.move("up");
-  }else if (keyCode === DOWN_ARROW) {
+  }else if (keyIsDown(40)) {
     player.move("down");
-  }else if (keyCode === LEFT_ARROW) {
+  }else if (keyIsDown(37)) {
     player.move("left");
-  }else if (keyCode === RIGHT_ARROW) {
+  }else if (keyIsDown(39)) {
     player.move("right");
   }
   return false;
@@ -240,40 +242,42 @@ class Player {
     this.colNum = 0;
     this.modelObject = playerObject;
     this.currentCellPosition = 0;
+    this.xPos = 0;
+    this.yPos = 0;
+    this.zPos = wallHeight/2;
   }
   show() {
-    let xPos = this.colNum*cellWidth + cellWidth/2;
-    let yPos = this.rowNum*cellWidth + cellWidth/2;
-    let zPos = wallHeight/2;
-    translate(xPos, yPos, zPos);
+    translate(this.xPos, this.yPos, this.zPos);
     scale(0.5);
     normalMaterial();
     model(this.modelObject);
-    translate(-1*(xPos), -1*(yPos), -1*(zPos));
+    translate(-1*(this.xPos), -1*(this.yPos), -1*(this.zPos));
   }
   getCurrentCellPosition() {
     let cellIndex = getIndex(this.colNum, this.rowNum);
     this.currentCellPosition = cellsArray[cellIndex];
+    this.xPos = this.colNum*cellWidth + cellWidth/2;
+    this.yPos = this.rowNum*cellWidth + cellWidth/2;
   }
   move(direction) {
     if(direction == "up") {
       if (this.currentCellPosition.walls[0] != true) {
-        this.rowNum -= 1;
+        this.yPos -= 75;
       }
     }else if (direction == "down") {
       if (this.currentCellPosition.walls[2] != true) {
-        this.rowNum += 1;
+        this.yPos += 75;
       }
     }else if (direction == "left") {
       if (this.currentCellPosition.walls[3] != true) {
-        this.colNum -= 1;
+        this.xPos -= 75;
       }
     }else if (direction == "right") {
       if (this.currentCellPosition.walls[1] != true) {
-        this.colNum += 1;
+        this.xPos += 75;
       }
     }
-    this.getCurrentCellPosition();
+    //this.getCurrentCellPosition();
   }
   checkWinCondition() {
     if (player.currentCellPosition == endingCell) {
