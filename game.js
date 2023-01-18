@@ -27,7 +27,8 @@ function setup() {
   numOfRows = floor(height / cellWidth);
   for(let rowNum = 0; rowNum < numOfRows; rowNum++) {
     for (let colNum = 0; colNum < numOfCols;colNum++) {
-      let cell = new Cell(colNum, rowNum); 
+      let cell = new Cell(colNum, rowNum);
+      cell.getWallBoundaries(); 
       cellsArray.push(cell);
     }
   }
@@ -141,11 +142,14 @@ function removeWalls(cellA, cellB) {
 function movePlayer() {
   if (keyIsDown(38)) {
     player.move("up");
-  }else if (keyIsDown(40)) {
+  }
+  if (keyIsDown(40)) {
     player.move("down");
-  }else if (keyIsDown(37)) {
+  }
+  if (keyIsDown(37)) {
     player.move("left");
-  }else if (keyIsDown(39)) {
+  }
+  if (keyIsDown(39)) {
     player.move("right");
   }
   return false;
@@ -154,8 +158,12 @@ class Cell {
   constructor(cellColNum, cellRowNum){
     this.rowNum = cellRowNum;
     this.colNum = cellColNum;
-    this.walls = [true, true, true, true];
+    this.walls = [true, true, true, true];//Top Right Bottom Left :)
     this.visited = false;
+    this.centerYPosition = 0;
+    this.centerXPosition = 0;
+    this.wallBoundaries = [0, 0, 0, 0];//Top Y Right X Bottom Y Left X :(
+
   }
   changeFloorColor(r,g,b,a) {
     let xPos = this.colNum*cellWidth;
@@ -199,6 +207,8 @@ class Cell {
   show() {
     let xPos = this.colNum * cellWidth;
     let yPos = this.rowNum * cellWidth;
+    this.centerYPosition = this.rowNum * cellWidth / 2;
+    this.centerXPosition = this.colNum * cellWidth / 2;
     noStroke();
     if (this.walls[0] == true) {
       line(xPos, yPos, xPos + cellWidth, yPos);
@@ -235,6 +245,12 @@ class Cell {
       rect(xPos, yPos, cellWidth, cellWidth);
     }
   }
+  getWallBoundaries() {
+    this.wallBoundaries[0] = this.centerYPosition - cellWidth / 2 + wallWidth / 2;
+    this.wallBoundaries[2] = this.centerYPosition + cellWidth / 2 - wallWidth / 2;
+    this.wallBoundaries[3] = this.centerXPosition - cellWidth / 2 + wallWidth / 2;
+    this.wallBoundaries[1] = this.centerXPosition + cellWidth / 2 - wallWidth / 2;
+  }
 }
 class Player {
   constructor() {
@@ -262,21 +278,24 @@ class Player {
   move(direction) {
     if(direction == "up") {
       if (this.currentCellPosition.walls[0] != true) {
-        this.yPos -= 75;
+        this.yPos -= 1;
+      }
+      else if ((this.yPos - 1) > this.currentCellPosition.wallBoundaries[0]){
+        this.yPos -= 1;
       }
     }else if (direction == "down") {
-      if (this.currentCellPosition.walls[2] != true) {
-        this.yPos += 75;
-      }
+     // if (this.currentCellPosition.walls[2] != true) {
+        this.yPos += 1;
+     // }
     }else if (direction == "left") {
-      if (this.currentCellPosition.walls[3] != true) {
-        this.xPos -= 75;
-      }
+    //  if (this.currentCellPosition.walls[3] != true) {
+        this.xPos -= 1;
+    //  }
     }else if (direction == "right") {
-      if (this.currentCellPosition.walls[1] != true) {
-        this.xPos += 75;
+    //  if (this.currentCellPosition.walls[1] != true) {
+        this.xPos += 1;
       }
-    }
+   // }
     //this.getCurrentCellPosition();
   }
   checkWinCondition() {
