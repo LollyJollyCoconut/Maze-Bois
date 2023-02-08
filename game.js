@@ -74,6 +74,7 @@ function draw() {
     enemy.checkWinCondition();
     enemy.show();
   }
+  translate(width/2, height/2, 0);
 }
 function modifyCameraSettings() {
   if (keyIsDown(87)) {
@@ -107,7 +108,6 @@ function getStartAndEndPositions() {
     player.rowNum = startingCell.rowNum;
     player.colNum = startingCell.colNum;
     player.getCurrentCellPosition();
-    enemy.getCurrentCellPosition();
     if (randomIndex == 0){
       endingCell = cornerCellsArray[2];
     }else if (randomIndex == 1){
@@ -147,17 +147,22 @@ function removeWalls(cellA, cellB) {
 function keyPressed() {
   if (keyCode === UP_ARROW) {
     player.move("up");
-    enemy.move("up");
-  }else if (keyCode === DOWN_ARROW) {
+  } else if (keyCode === DOWN_ARROW) {
     player.move("down");
-    enemy.move("down");
-  }else if (keyCode === LEFT_ARROW) {
+  } else if (keyCode === LEFT_ARROW) {
     player.move("left");
-    enemy.move("left");
-  }else if (keyCode === RIGHT_ARROW) {
+  } else if (keyCode === RIGHT_ARROW) {
     player.move("right");
+  } else if (keyCode == 73){
+    enemy.move("up");
+  } else if (keyCode == 75){
+    enemy.move("down");
+  } else if (keyCode == 74){
+    enemy.move("left");
+  } else if (keyCode == 76){
     enemy.move("right");
   }
+
   return false;
 }
 class Cell {
@@ -308,11 +313,11 @@ class BadBoy {
     let yPos = this.rowNum*cellWidth + cellWidth/2;
     let zPos = wallHeight/2;
     translate(xPos, yPos, zPos);
-    scale(1.0);
+    scale(0.5);
     specularMaterial(250);
     shininess(50);
     console.log(this.xAngle);
-    rotateX(this.xAngle);
+    //rotateX(this.xAngle);
     model(this.modelObject);
     translate(-1*(xPos), -1*(yPos), -1*(zPos));
   }
@@ -321,6 +326,7 @@ class BadBoy {
     this.currentCellPosition = cellsArray[cellIndex];
   }
   move(direction) {
+    this.getCurrentCellPosition();
     if(direction == "up") {
       if (this.currentCellPosition.walls[0] != true) {
         this.rowNum -= 1;
@@ -346,7 +352,6 @@ class BadBoy {
         this.yAngle = 90;
       }
     }
-    this.getCurrentCellPosition();
   }
   checkWinCondition() {
     if (player.currentCellPosition == endingCell) {
