@@ -40,6 +40,7 @@ function setup() {
   player = new Player();
 }
 function draw() {
+  push();
   background (255,215,0);
   lights();
   modifyCameraSettings();
@@ -70,11 +71,12 @@ function draw() {
   else {
     endingCell.changeFloorColor(0,100,100);
     player.checkWinCondition();
-    player.show();
-    enemy.checkWinCondition();
     enemy.show();
+    enemy.checkWinCondition();
+    player.show();
   }
   translate(width/2, height/2, 0);
+  pop();
 }
 function modifyCameraSettings() {
   if (keyIsDown(87)) {
@@ -216,32 +218,40 @@ class Cell {
     let yPos = this.rowNum * cellWidth;
     noStroke();
     if (this.walls[0] == true) {
+      push();
       line(xPos, yPos, xPos + cellWidth, yPos);
       translate(xPos + cellWidth/2, yPos, 0 + wallHeight/2);
       texture(wallTexture);
       box(cellWidth + offset, wallWidth, wallHeight);
       translate(-1*(xPos + cellWidth/2), -1*(yPos), -1*(0 + wallHeight/2));
+      pop();
     }
     if (this.walls[2] == true) {
+      push();
       line(xPos, yPos + cellWidth, xPos + cellWidth, yPos + cellWidth);
       translate(xPos + cellWidth/2, yPos + cellWidth, 0 + wallHeight/2);
       texture(wallTexture);
       box(cellWidth + offset, wallWidth, wallHeight);
       translate(-1*(xPos + cellWidth/2), -1*(yPos + cellWidth), -1*(0 + wallHeight/2));
+      pop();
     }
     if (this.walls[3] == true) {
+      push();
       line(xPos, yPos, xPos, yPos + cellWidth);
       translate(xPos, yPos + cellWidth/2, 0 + wallHeight/2);
       texture(wallTexture);
       box(wallWidth, cellWidth + offset, wallHeight);
       translate(-1*(xPos), -1*(yPos + cellWidth/2), -1*(0 + wallHeight/2));
+      pop();
     }
     if (this.walls[1] == true) {
+      push();
       line(xPos + cellWidth, yPos, xPos + cellWidth, yPos + cellWidth);
       translate(xPos + cellWidth, yPos + cellWidth/2, 0 + wallHeight/2);
       texture(wallTexture);
       box(wallWidth, cellWidth + offset, wallHeight);
       translate(-1*(xPos + cellWidth), -1*(yPos + cellWidth/2), -1*(0 + wallHeight/2));
+      pop();
 
     }
     if (this.visited == true) {
@@ -259,6 +269,7 @@ class Player {
     this.currentCellPosition = 0;
   }
   show() {
+    push();
     let xPos = this.colNum*cellWidth + cellWidth/2;
     let yPos = this.rowNum*cellWidth + cellWidth/2;
     let zPos = wallHeight/2;
@@ -267,6 +278,7 @@ class Player {
     normalMaterial();
     model(this.modelObject);
     translate(-1*(xPos), -1*(yPos), -1*(zPos));
+    pop();
   }
   getCurrentCellPosition() {
     let cellIndex = getIndex(this.colNum, this.rowNum);
@@ -301,25 +313,27 @@ class Player {
 
 class BadBoy {
   constructor() {
-    this.rowNum = 0;
-    this.colNum = 0;
+    this.rowNum = Math.floor(Math.random()*(numOfRows-1));
+    this.colNum = Math.floor(Math.random()*(numOfCols-1));
     this.modelObject = bigBadGuyObject;
     this.currentCellPosition = 0;
     this.xAngle = 0;
     this.yAngle = 0;
   }
   show() {
+    push();
     let xPos = this.colNum*cellWidth + cellWidth/2;
     let yPos = this.rowNum*cellWidth + cellWidth/2;
     let zPos = wallHeight/2;
     translate(xPos, yPos, zPos);
-    scale(0.5);
+    scale(0.4);
     specularMaterial(250);
     shininess(50);
     console.log(this.xAngle);
-    //rotateX(this.xAngle);
+    rotateZ(90);
     model(this.modelObject);
     translate(-1*(xPos), -1*(yPos), -1*(zPos));
+    pop();
   }
   getCurrentCellPosition() {
     let cellIndex = getIndex(this.colNum, this.rowNum);
@@ -330,26 +344,26 @@ class BadBoy {
     if(direction == "up") {
       if (this.currentCellPosition.walls[0] != true) {
         this.rowNum -= 1;
-        this.xAngle = -90;
+        this.xAngle = 90;
         this.yAngle = 0;
       }
     }else if (direction == "down") {
       if (this.currentCellPosition.walls[2] != true) {
         this.rowNum += 1;
-        this.xAngle = 90;
+        this.xAngle = -90;
         this.yAngle = 0;
       }
     }else if (direction == "left") {
       if (this.currentCellPosition.walls[3] != true) {
         this.colNum -= 1;
         this.xAngle = 0;
-        this.yAngle = -90;
+        this.yAngle = 90;
       }
     }else if (direction == "right") {
       if (this.currentCellPosition.walls[1] != true) {
         this.colNum += 1;
         this.xAngle = 0;
-        this.yAngle = 90;
+        this.yAngle = -90;
       }
     }
   }
