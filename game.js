@@ -31,7 +31,8 @@ function setup() {
   angleMode(DEGREES);
   for(let rowNum = 0; rowNum < numOfRows; rowNum++) {
     for (let colNum = 0; colNum < numOfCols;colNum++) {
-      let cell = new Cell(colNum, rowNum); 
+      let arrayIndex = getIndex(colNum, rowNum);
+      let cell = new Cell(colNum, rowNum, arrayIndex);
       cellsArray.push(cell);
     }
   }
@@ -119,6 +120,17 @@ function getStartAndEndPositions() {
     }else if (randomIndex == 3){
       endingCell = cornerCellsArray[1];
     }
+    let enemyPositionDecided = false;
+    while(enemyPositionDecided == false) {
+      let index = Math.floor(Math.random()*cellsArray.length);
+      let enemyPosition = cellsArray[index];
+      if(index != startingCell.index && index != endingCell.index) {
+        enemy.rowNum = enemyPosition.rowNum;
+        enemy.colNum = enemyPosition.colNum;
+        enemy.getCurrentCellPosition();
+        enemy.PositionDecided = true;
+      }
+    }
   }
 }
 function getIndex(colNum, rowNum) {
@@ -168,11 +180,12 @@ function keyPressed() {
   return false;
 }
 class Cell {
-  constructor(cellColNum, cellRowNum){
+  constructor(cellColNum, cellRowNum, arrayIndex){
     this.rowNum = cellRowNum;
     this.colNum = cellColNum;
     this.walls = [true, true, true, true];
     this.visited = false;
+    this.index = arrayIndex;
   }
   changeFloorColor(r,g,b,a) {
     let xPos = this.colNum*cellWidth;
@@ -313,8 +326,8 @@ class Player {
 
 class BadBoy {
   constructor() {
-    this.rowNum = Math.floor(Math.random()*(numOfRows-1));
-    this.colNum = Math.floor(Math.random()*(numOfCols-1));
+    this.rowNum = 0;
+    this.colNum = 0;
     this.modelObject = bigBadGuyObject;
     this.currentCellPosition = 0;
     this.xAngle = 0;
