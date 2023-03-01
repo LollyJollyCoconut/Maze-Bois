@@ -18,6 +18,9 @@ let endingCell;
 let isMazeDoneDrawing = false;
 let bigBadGuyObject;
 let enemy;
+let enemyPositionDecided = false;
+let enemyMovementCounter = 0;
+let canEnemyMove = false;
 
 function preload(){
   wallTexture = loadImage("E.png");
@@ -71,6 +74,11 @@ function draw() {
   }
   else {
     endingCell.changeFloorColor(0,100,100);
+    enemyMovementCounter += 1;
+    if (enemyMovementCounter >= 10000){
+      enemy.moveTowardsPlayer(player);
+      enemyMovementCOunter = 0;
+    }
     player.checkWinCondition();
     enemy.show();
     enemy.checkWinCondition();
@@ -120,7 +128,6 @@ function getStartAndEndPositions() {
     }else if (randomIndex == 3){
       endingCell = cornerCellsArray[1];
     }
-    let enemyPositionDecided = false;
     while(enemyPositionDecided == false) {
       let index = Math.floor(Math.random()*cellsArray.length);
       let enemyPosition = cellsArray[index];
@@ -128,7 +135,7 @@ function getStartAndEndPositions() {
         enemy.rowNum = enemyPosition.rowNum;
         enemy.colNum = enemyPosition.colNum;
         enemy.getCurrentCellPosition();
-        enemy.PositionDecided = true;
+        enemyPositionDecided = true;
       }
     }
   }
@@ -378,6 +385,19 @@ class BadBoy {
         this.xAngle = 0;
         this.yAngle = -90;
       }
+    }
+  }
+
+  moveTowardsPlayer(bro) {
+    if (this.colNum > bro.colNum) {
+      this.move("left");
+    } else if (this.colNum < bro.colNum) {
+      this.move("right");
+    }
+    if (this.rowNum > bro.rowNum) {
+      this.move("up");
+    } else if (this.rowNum < bro.rowNum) {
+      this.move("down");
     }
   }
   checkWinCondition() {
