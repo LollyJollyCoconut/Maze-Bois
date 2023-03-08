@@ -75,9 +75,10 @@ function draw() {
   else {
     endingCell.changeFloorColor(0,100,100);
     enemyMovementCounter += 1;
-    if (enemyMovementCounter >= 10000){
+    if (enemyMovementCounter >= 100){
       enemy.moveTowardsPlayer(player);
-      enemyMovementCOunter = 0;
+      console.log("move");
+      enemyMovementCounter = 0;
     }
     player.checkWinCondition();
     enemy.show();
@@ -339,6 +340,7 @@ class BadBoy {
     this.currentCellPosition = 0;
     this.xAngle = 0;
     this.yAngle = 0;
+    this.stopOrientaion = "up";
   }
   show() {
     push();
@@ -389,15 +391,42 @@ class BadBoy {
   }
 
   moveTowardsPlayer(bro) {
-    if (this.colNum > bro.colNum) {
+    // if (this.colNum > bro.colNum && this.currentCellPosition.walls[3] == false) {
+    //   this.move("left");
+    // } else if (this.colNum < bro.colNum && this.currentCellPosition.walls[1] == false) {
+    //   this.move("right");
+    // }
+    // else if (this.rowNum > bro.rowNum && this.currentCellPosition.walls[0] == false) {
+    //   this.move("up");
+    // } else if (this.rowNum < bro.rowNum && this.currentCellPosition.walls[2] == false) {
+    //   this.move("down");
+    // }
+    // else if (this.colNum > bro.colNum && this.currentCellPosition.walls[3] == true) {
+    //   this.move("right");
+    //   this.move("right");
+    // } else if (this.colNum < bro.colNum && this.currentCellPosition.walls[1] == true) {
+    //   this.move("left");
+    //   this.move("left");
+    // }
+    // else if (this.rowNum > bro.rowNum && this.currentCellPosition.walls[0] == true) {
+    //   this.move("down");
+    //   this.move("down");
+    // } else if (this.rowNum < bro.rowNum && this.currentCellPosition.walls[2] == true) {
+    //   this.move("up");
+    //   this.move("up");
+    // }
+    if(this.currentCellPosition.walls[3] == false){
       this.move("left");
-    } else if (this.colNum < bro.colNum) {
-      this.move("right");
-    }
-    if (this.rowNum > bro.rowNum) {
+      this.stopOrientaion = "left";
+    }else if(this.currentCellPosition.walls[0] == false){
       this.move("up");
-    } else if (this.rowNum < bro.rowNum) {
+      this.stopOrientation = "up";
+    }else if (this.currentCellPosition.walls[1] == false){
+      this.move("right");
+      this.stopOrientation = "right";
+    }else {
       this.move("down");
+      this.stopOrientation = "down";
     }
   }
   checkWinCondition() {
